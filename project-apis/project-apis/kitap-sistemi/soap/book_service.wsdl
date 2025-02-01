@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://localhost:8000/book-reviews"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://localhost:8000/book-reviews">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://localhost:8000/book-reviews">
+            <xsd:element name="Review">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="bookId" type="xsd:string"/>
+                        <xsd:element name="userId" type="xsd:string"/>
+                        <xsd:element name="rating" type="xsd:integer"/>
+                        <xsd:element name="comment" type="xsd:string"/>
+                        <xsd:element name="date" type="xsd:dateTime"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="ReviewResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="success" type="xsd:boolean"/>
+                        <xsd:element name="reviewId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="GetReviewsRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="bookId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="GetReviewsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="reviews" type="tns:Review" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="addReviewRequest">
+        <wsdl:part name="parameters" element="tns:Review"/>
+    </wsdl:message>
+    <wsdl:message name="addReviewResponse">
+        <wsdl:part name="parameters" element="tns:ReviewResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getReviewsRequest">
+        <wsdl:part name="parameters" element="tns:GetReviewsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getReviewsResponse">
+        <wsdl:part name="parameters" element="tns:GetReviewsResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="BookReviewService">
+        <wsdl:operation name="addReview">
+            <wsdl:input message="tns:addReviewRequest"/>
+            <wsdl:output message="tns:addReviewResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getReviews">
+            <wsdl:input message="tns:getReviewsRequest"/>
+            <wsdl:output message="tns:getReviewsResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="BookReviewServiceSOAP" type="tns:BookReviewService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="addReview">
+            <soap:operation soapAction="http://localhost:8000/book-reviews/addReview"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getReviews">
+            <soap:operation soapAction="http://localhost:8000/book-reviews/getReviews"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="BookReviewService">
+        <wsdl:port name="BookReviewServiceSOAP" binding="tns:BookReviewServiceSOAP">
+            <soap:address location="http://localhost:8000/book-reviews"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions> 
